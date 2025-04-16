@@ -1,0 +1,106 @@
+1D (single-column) analysis with ecRad:
+
+Test1: CloudTemperature/Altitude.
+Test2: Geometrical Depth
+    2a: Fixed cloud top temperature at 201K.
+    2b: Fixed cloud bottom temperature at 236K.
+Test3: IWP.
+Test4: Effective Radius.
+
+v7b (2024-01-22)
+This version include calculation of TOA CRE array for each matrix visualization, and as a new variable in top axis of matrix visualizations.
+
+v7a (2024-07-23)
+Includes gases:
+1. As one scalar: CO2 = 390.1ppm, CH4 = 1.8ppm, N2O = 322ppb, O2 = 0.20942ppm, from 2012 climatology used in ICON run simulations. (Potential test in the future, with vertical distribution of gases (7b)).
+2. New format figures with logscale colorbar.
+3. IWP range in logscale.
+4. Effective radii range with higher resolution.
+
+v6 (2023-07-21)
+Fixed:
+    1. Radiative Transfer Model: ecRad
+    2. cos_sza = 0.6 (Effective solar zenith angle of 53 degrees, (Wallace&Hobbs 2006))
+    3. SW albedo = 0.05 (Hartmann&Berry, 2017).
+    4. LW emissivity = 0.97 (REFERENCE?)
+    5. Skin temperature as surface temperature (~300 K, (Jin&Dickinson, 2010))
+    6. No gases and aerosols.
+    7. No liquid water.
+    8. Tropical Sounding Climatology (Temperature, Pressure and Specific Humidity) (Lapse Rate of 6.7 K/km).
+Variables:
+    1. Macro: Temperature (Altitude-position) -> 236 K to 201 K
+    2. Macro: Geometrical Depth Dh -> 0.5 km to 5 km every 0.25 km (Nellore, Kannan, Vellaisamy 2019).
+    3. Macro: Ice Water Path (IWP) -> 0.1 to 1000 g/m^2, with 30 g/m^2 for fixed value (Around Anvil Cirrus IWP typical value (Sokol & Hartmann 2020)):
+        IWP \;=\; \int{IWC\;dz} \;=\; \int_{h_1}^{h_2}{q_i\;\rho(z)\;dz} \;=\; 30\;\frac{g}{m^2}\;\;\; , \;\;\;(h_2 - h_1 = \Delta h \;(km))$$
+
+        where IWC is the Ice Water Content $(g/m^3)$, which is the Ice Water Mixing Ratio $q_{i}\;(g/kg)$ times the density $\rho(z)$:
+
+        $$\Rightarrow\;q_i = \frac{30\;g/m^2}{\int_{h_1}^{h_2}{\rho(z)\;dz}}$$
+    4. Micro: Effective Radius $r_e$ = 30 $\mu m$ (Hartmann & Berry, 2017).
+    5. Ice Optical Schemes:
+        3.1 Fu 1996 and Fu, Yang & Sun 1998 (1O)
+        3.2 Yi et al. 2013 (2O)
+        3.3 Baran et al. 2016 (3O)
+        3.4 Baran et al. 2014 (4O)
+    6. Solvers: Tripleclouds.
+Other main changes: 
+    1. np.gradient instead of np.diff(y)/np.diff(x) for CRH calculation.
+    2. 'RdBu_r' instead of 'seismic' for colorbars.
+    3. Correction of q_i calculation.
+    
+v5 (2023-07-07)
+Fixed:
+    1. cos_sza = 0.6 (effective solar zenith angle of 53, (Wallace&Hobbs 2006))
+    2. SW albedo = 0.05 (Hartmann&Berry, 2017).
+    3. LW emissivity = 0.97 (REFERENCE?)
+    4. Skin temperature as surface temperature (~300 K, (Jin&Dickinson, 2010))
+    5. No gases and aerosols.
+    6. No liquid water.
+    7. Tropical sounding (Lapse Rate of 6.7 K/km).
+Variables:
+    1. Ice Water Path (IWP) = IWC x int(density(z) dz) = 30 g/m^2 (fixed geometrical depth of 1.5 km).
+    where IWC is the Ice Water Content (g/m^3), which is the Ice Water Mixing Ratio q_i (g/kg) times the density.
+    (variable from .1 to 1000)
+    2. Effective Radius r_e = 30 um (variable from 1 to 100 um every 5 (1, 5, 10, 15...)).
+
+v4 (2023-06-26)
+Fixed:
+    1. cos_sza = 0.6 (effective solar zenith angle of 53, (Wallace&Hobbs 2006))
+    2. SW albedo = 0.05 (Hartmann&Berry, 2017).
+    3. LW emissivity = 0.97 (REFERENCE?)
+    4. Skin temperature as surface temperature (~300 K, (Jin&Dickinson, 2010))
+    5. No gases and aerosols.
+    6. No liquid water.
+    7. Tropical sounding (Lapse Rate of 6.7 K/km).
+Variables:
+    1. Ice Water Path (IWP) = IWC x int(density(z) dz) = 40 g/m^2 (fixed geometrical depth of 1 km).
+    where IWC is the Ice Water Content (g/m^3), which is the Ice Water Mixing Ratio q_i (g/kg) times the density.
+    (variable from .1 to 1000)
+    2. Effective Radius r_e = 30 um (variable from 1 to 100 um every 5 (1, 5, 10, 15...)).
+
+v3 (2023-06-19):
+Fixed:
+    1. cos_sza = 0.6 (effective solar zenith angle of 53).
+    2. SW albedo = 0.05
+    3. LW emissivity = 0.97
+    4. Skin temperature as surface temperature.
+    5. No gases and aerosols.
+    6. No liquid water.
+    7. Tropical sounding.
+Variables:
+    1. Ice Water Path IWP = IWC x int(density(z) dz) = 100 g/m2 (fixed physical depth of 1 km).
+    2. Effective radius r_e = 50 um
+
+v2 (2023-06-01):
+Fixed:
+    1. cos_sza = 1 (solar zenith angle of 0).
+    2. SW albedo = 0.3
+    3. LW emissivity = 0.97
+    4. Skin temperature as surface temperature.
+    5. No gases and aerosols.
+    6. No liquid water.
+    7. Tropical sounding.
+Variables:
+    1. Ice Water Path IWP = IWC x density x h = 0.064 g/kg x 1.3 kg/m3 x 1.2 km = 100 g/m2 (8 K depth ~ 1.2 km depth with 6.7 K/km).
+        (Ice water mixing ratio q_i of 0.064 g/kg).
+    2. Effective radius r_e = 50 um
